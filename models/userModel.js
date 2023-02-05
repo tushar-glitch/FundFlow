@@ -13,6 +13,10 @@ const auth_schema = new mongoose.Schema({
         type: String,
         required: true
     },
+    password: {
+        type: String,
+        required:true
+    },
     Role: {
         type: String,
         required: true

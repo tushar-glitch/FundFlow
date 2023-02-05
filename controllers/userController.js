@@ -2,14 +2,15 @@ const auth_Model = require("../models/userModel")
 
 class userController {
     static userRegistration = async (req, res) => {
-        const { name, age, email, Role } = req.body
-        if (name, age, email, Role) {
+        const { name, age, email, password, Role } = req.body
+        if (name, age, email, password, Role) {
             const isemail = await auth_Model.findOne({ email: email })
             if (!isemail) {
                 const new_user = auth_Model({
                     name: name,
                     age: age,
                     email: email,
+                    password:password,
                     Role: Role
                 })
                 const save_user = await new_user.save()
@@ -31,7 +32,7 @@ class userController {
         }
     }
     static userLogin = async (req, res) => {
-        const { email, Role } = req.body
+        const { email, password } = req.body
         const isemail = await auth_Model.findOne({ email: email })
         if (!isemail) {
             res.status(404).json({
@@ -39,14 +40,19 @@ class userController {
             })
         }
         else {
-            if (isemail.Role != Role) {
+            if (isemail.password != password) {
                 res.status(404).json({
-                    "message": "Email not found. First register to create new account"
+                    "message": "Invalid password"
+                })
+            }
+            else if(email&&password) {
+                res.status(200).json({
+                    "message":"Logged In successfully!"
                 })
             }
             else {
-                res.status(200).json({
-                    "message":"Logged In successfully!"
+                res.status(403).json({
+                    "message":"Please fill all the fields"
                 })
             }
         }
