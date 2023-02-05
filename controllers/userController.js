@@ -30,6 +30,27 @@ class userController {
             console.log('Field empty');
         }
     }
+    static userLogin = async (req, res) => {
+        const { email, Role } = req.body
+        const isemail = await auth_Model.findOne({ email: email })
+        if (!isemail) {
+            res.status(404).json({
+                "message": "Email not found. First register to create new account"
+            })
+        }
+        else {
+            if (isemail.Role != Role) {
+                res.status(404).json({
+                    "message": "Email not found. First register to create new account"
+                })
+            }
+            else {
+                res.status(200).json({
+                    "message":"Logged In successfully!"
+                })
+            }
+        }
+    }
 }
 
 module.exports = userController
