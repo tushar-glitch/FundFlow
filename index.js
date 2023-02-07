@@ -3,7 +3,9 @@ const app = express()
 const cors = require('cors')
 const auth_Model = require('./models/userModel')
 const mongoose = require('mongoose')
-const route = require('./routes/user_routes')
+const user_route = require('./routes/user_routes')
+const startup_route = require('./routes/startuproutes')
+
 app.use(cors())
 app.use(express.json())
 
@@ -15,6 +17,7 @@ mongoose.connect(connection_url, { useNewUrlParser: true, useUnifiedTopology: tr
         console.log("MongoDB connected");
     })
 
-app.use('/user',route)
+app.use('/user',user_route)
+app.use('/startup',startup_route)
 
 app.listen(3001)
