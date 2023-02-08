@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 class userController {
     static userRegistration = async (req, res) => {
         const { name, age, email, password, Role } = req.body
-        if (name, email, password, Role) {
+        if (name&&email&&password&&Role) {
             const isemail = await auth_Model.findOne({ email: email })
             if (!isemail) {
                 const newpass = await bcrypt.hash(password, 10)

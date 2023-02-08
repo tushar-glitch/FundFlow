@@ -16,6 +16,18 @@ const auth_schema = new mongoose.Schema({
     Role: {
         type: String,
         required: true
+    },
+    age : {
+        type: Number,
+    },
+    experience : {
+        type: Number,
+    },
+    no_of_companies_funded: {
+        type: Number,
+    },
+    total_money_funded: {
+        type: Number,
     }
 })
 const auth_Model = mongoose.model('users', auth_schema)
