@@ -17,16 +17,32 @@ const startup_schema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    unique_feature: {
-        type: String,
-        required:true
-    },
     video_link: {
         type: String,
         required:true
     },
     evaluation_of_last_year: {
         type: String,
+        required:true
+    },
+    founder: {
+        type: String,
+        required:true
+    },
+    co_founder: {
+        type: String,
+        required:true
+    },
+    location: {
+        type: String,
+        required:true
+    },
+    ask_money: {
+        type: Number,
+        required:true
+    },
+    give_equity: {
+        type: Number,
         required:true
     }
 })

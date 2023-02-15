@@ -17,6 +17,9 @@ const auth_schema = new mongoose.Schema({
         type: String,
         required: true
     },
+    isverified: {
+        type: Boolean
+    },
     age : {
         type: Number,
     },
