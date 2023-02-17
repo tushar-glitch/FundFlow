@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const user_route = require('./routes/user_routes')
 const startup_route = require('./routes/startuproutes')
 const investor_route = require('./routes/investor_routes')
+const bid_route = require('./routes/bidding_route')
 
 app.use(cors())
 app.use(express.json())
@@ -21,5 +22,6 @@ mongoose.connect(connection_url, { useNewUrlParser: true, useUnifiedTopology: tr
 app.use('/user',user_route)
 app.use('/startup',startup_route)
 app.use('/investor',investor_route)
+app.use('/bid',bid_route)
 
 app.listen(3001)

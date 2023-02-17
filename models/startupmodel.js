@@ -44,6 +44,12 @@ const startup_schema = new mongoose.Schema({
     give_equity: {
         type: Number,
         required:true
+    },
+    leaderboard: {
+        type:Array
+    },
+    isstart: {
+        type:Boolean
     }
 })
 const startup_model = mongoose.model('startup', startup_schema)
