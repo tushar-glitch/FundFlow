@@ -43,7 +43,7 @@ class userController {
                 })
             }
             else {
-                const expiresAt = otprecords[0].expiresAt
+                const expiresAt = otprecords[otprecords.length-1].expiresAt
                 const otp = otprecords[otprecords.length-1].otp
                 console.log(otp);
                 console.log(user_otp);
