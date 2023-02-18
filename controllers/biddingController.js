@@ -23,7 +23,6 @@ class biddingController {
                 const tokenArr = bearerheader.split(' ')
                 const token = tokenArr[1]
                 const decode = jwt.verify(token, secretKey)
-                console.log(decode.email);
                 evaluation = Number(evaluation)
                 const bid = {
                     email: decode.email,

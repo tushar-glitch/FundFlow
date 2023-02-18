@@ -1,7 +1,5 @@
 1. for now using name field to patch profile details..later change this through config and access token
 2. change isverified to true when otp authentication is successfull
 
-startauction
 
-
-abhi tak leaderboard sort kar diya hai. ab user ko wapis uski rank bhejo aur ha, leaderboard mein same email ni hona chahiye to sath sath delete karna hai to wo bhi dekhna.
+start auction wahi kar sake jiska startup hai.

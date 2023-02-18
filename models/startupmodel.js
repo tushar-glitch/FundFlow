@@ -50,6 +50,9 @@ const startup_schema = new mongoose.Schema({
     },
     isstart: {
         type:Boolean
+    },
+    email: {
+        type:String
     }
 })
 const startup_model = mongoose.model('startup', startup_schema)

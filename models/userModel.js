@@ -31,6 +31,9 @@ const auth_schema = new mongoose.Schema({
     },
     total_money_funded: {
         type: Number,
+    },
+    startup_name: {
+        type:String
     }
 })
 const auth_Model = mongoose.model('users', auth_schema)
