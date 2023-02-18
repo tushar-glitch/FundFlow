@@ -1,3 +1,4 @@
 1. for now using name field to patch profile details..later change this through config and access token
 2. change isverified to true when otp authentication is successfull
 
+auction end karne pe "auction not started yet hi aa raha hai". to ya to isended bhi laga do aur usko true kar do.
