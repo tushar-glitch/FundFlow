@@ -15,7 +15,7 @@ class biddingController {
             }
             else if (!isstartup.isstart) {
                 res.status(403).json({
-                    message:"Auction is not started yet"
+                    message: "Auction is not started yet"
                 })
             }
             else {
@@ -40,6 +40,15 @@ class biddingController {
                         { name: isstartup.name },
                         { $push: { leaderboard: bid } },
                     );
+                    var rank
+                    isstartup.leaderboard.sort((a, b) => b.evaluation - a.evaluation);
+                    console.log(isstartup.leaderboard);
+                    for (let i = 0; i < isstartup.leaderboard.length; i++) {
+                        if (isstartup.leaderboard[i].email == decode.email) {
+                            rank = i + 1
+                        }
+                    }
+                    res.json({ rank: rank })
                 }
                 else {
                     startup_model.findOneAndUpdate(
@@ -56,7 +65,7 @@ class biddingController {
                                 console.log(doc.leaderboard);
                                 for (let i = 0; i < doc.leaderboard.length; i++) {
                                     if (doc.leaderboard[i].email == decode.email) {
-                                        rank=i+1
+                                        rank = i + 1
                                     }
                                 }
                                 res.json({ rank: rank })

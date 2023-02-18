@@ -78,6 +78,37 @@ class startupController {
             }
         }
     }
+    static end_auction = async (req, res) => {
+        const { name } = req.body
+        const isname = await startup_model.findOne({ name: name })
+        console.log(isname);
+        if (!isname) {
+            res.status(404).json({
+                message: "Startup not found!"
+            })
+        }
+        else {
+            const bearerheader = req.headers['authorization']
+            const tokenArr = bearerheader.split(' ')
+            const token = tokenArr[1]
+            const decode = jwt.verify(token, secretKey)
+            console.log(isname.email);
+            if (isname.email == decode.email) {
+                await startup_model.updateOne(
+                    { name: isname.name },
+                    { $set: { isstart: false } }
+                );
+                res.status(200).json({
+                    message: "Auction ended!"
+                })
+            }
+            else {
+                res.status(403).json({
+                    message:"You are not authorized to end the auction!"
+                })
+            }
+        }
+    }
 }
 
 module.exports = startupController
