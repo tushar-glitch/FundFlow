@@ -46,7 +46,7 @@ const startup_schema = new mongoose.Schema({
         required:true
     },
     leaderboard: {
-        type:Array
+        type: Array
     },
     isstart: {
         type:Boolean

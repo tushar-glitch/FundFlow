@@ -4,9 +4,11 @@ const jwt = require('jsonwebtoken')
 const otp_model = require("../models/otpmodel")
 const secretKey = "randomSecret"
 const nodemailer = require('nodemailer')
+const { response } = require("express")
+const startup_model = require("../models/startupmodel")
 class userController {
-    static sendotp = async (email,res) => {
-        const otp = Math.floor(((Math.random()*9000)+1000)) 
+    static sendotp = async (email, res) => {
+        const otp = Math.floor(((Math.random() * 9000) + 1000))
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -18,49 +20,49 @@ class userController {
             from: "tusharc20001@gmail.com",
             to: email,
             subject: "Verify your email",
-            html : `Your otp for verification is <b>${otp}</b>. This code will expire in an <b>1 hour</b>`
+            html: `Your otp for verification is <b>${otp}</b>. This code will expire in an <b>1 hour</b>`
         }
         const newOtpVerfication = await new otp_model({
             email: email,
             otp: otp,
             createdAt: Date.now(),
-            expiresAt: Date.now() + 3600000 
+            expiresAt: Date.now() + 3600000
         })
         await newOtpVerfication.save()
         await transporter.sendMail(mailoptions)
     }
-    
+
     static verifyotp = async (req, res) => {
         const { email, user_otp } = req.body
         if (email && user_otp) {
             const otprecords = await otp_model.find({
-                email:email
+                email: email
             })
-            
+
             if (otprecords.length == 0) {
                 res.status(403).json({
-                    message:"Account does not exist or is already verified!"
+                    message: "Account does not exist or is already verified!"
                 })
             }
             else {
-                const expiresAt = otprecords[otprecords.length-1].expiresAt
-                const otp = otprecords[otprecords.length-1].otp
+                const expiresAt = otprecords[otprecords.length - 1].expiresAt
+                const otp = otprecords[otprecords.length - 1].otp
                 console.log(otp);
                 console.log(user_otp);
                 if (expiresAt < Date.now()) {
                     res.status(403).json({
-                        message:"Otp has expired!"
+                        message: "Otp has expired!"
                     })
                 }
                 else {
                     if (user_otp == otp) {
                         res.status(200).json({
-                            message:"Your account has been verified!"
+                            message: "Your account has been verified!"
                         })
                     }
                     else {
                         res.status(403).json({
-                            message:"Wrong otp!"
+                            message: "Wrong otp!"
                         })
                     }
                 }
@@ -68,11 +70,11 @@ class userController {
         }
         else {
             res.status(404).json({
-                message:"Please provide email and otp"
+                message: "Please provide email and otp"
             })
         }
     }
-    
+
     static userRegistration = async (req, res) => {
         const { name, age, email, password, Role } = req.body
         if (name && email && password && Role) {
@@ -84,12 +86,12 @@ class userController {
                     email: email,
                     password: newpass,
                     Role: Role,
-                    isverified:false
+                    isverified: false
                 })
-                userController.sendotp(email,res)
+                userController.sendotp(email, res)
                 const save_user = await new_user.save()
                 res.status(200).json({
-                    message:"Otp has been sent successfully to your email!"
+                    message: "Otp has been sent successfully to your email!"
                 })
             }
             else {
@@ -105,11 +107,11 @@ class userController {
             console.log('Field empty');
         }
     }
-    
-    
+
+
     static userLogin = async (req, res) => {
-        const { email, password } = req.body
-        if (email && password) {
+        const { email, password, role } = req.body
+        if (email && password && role) {
             const isuser = await auth_Model.findOne({ email: email })
             if (!isuser) {
                 res.status(403).json({
@@ -124,11 +126,26 @@ class userController {
                     })
                 }
                 else {
-                    const token = jwt.sign({ email, password }, secretKey, { expiresIn: '1h' })
-                    console.log(token);
-                    res.status(200).json({
-                        "token":token
-                    })
+                    if ((isuser.Role).toLowerCase() == role.toLowerCase()) {
+                        const token = jwt.sign({ email, password }, secretKey, { expiresIn: '1h' })
+                        if ((isuser.Role).toLowerCase() == 'pitcher') {
+                            const startupdetails = await startup_model.find({ email: email })
+                            res.status(200).json({
+                                token: token,
+                                startupdetails: startupdetails
+                            })
+                        }
+                        else {
+                            res.status(200).json({
+                                "token": token
+                            })
+                        }
+                    }
+                    else {
+                        res.status(403).json({
+                            message: "Invalid role"
+                        })
+                    }
                 }
             }
         }
