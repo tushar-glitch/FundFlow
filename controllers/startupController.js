@@ -36,7 +36,7 @@ class startupController {
             }
             else {
                 res.status(400).json({
-                    message:"Startup with this email id already exist!"
+                    message: "Startup with this email id already exist!"
                 })
             }
         }
@@ -81,7 +81,7 @@ class startupController {
             }
             else {
                 res.status(403).json({
-                    message:"You are not authorized to start the auction!"
+                    message: "You are not authorized to start the auction!"
                 })
             }
         }
@@ -100,19 +100,23 @@ class startupController {
             const tokenArr = bearerheader.split(' ')
             const token = tokenArr[1]
             const decode = jwt.verify(token, secretKey)
-            console.log(isname.email);
+            console.log(isname.leaderboard);
+            const data = isname.leaderboard;
+            data.sort((a, b) => b.evaluation - a.evaluation);
+            console.log(data);
             if (isname.email == decode.email) {
                 await startup_model.updateOne(
                     { name: isname.name },
                     { $set: { isstart: false } }
                 );
                 res.status(200).json({
-                    message: "Auction ended!"
+                    message: "Auction ended!",
+                    leaderboard: data
                 })
             }
             else {
                 res.status(403).json({
-                    message:"You are not authorized to end the auction!"
+                    message: "You are not authorized to end the auction!"
                 })
             }
         }

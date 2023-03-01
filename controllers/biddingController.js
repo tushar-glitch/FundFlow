@@ -68,6 +68,7 @@ class biddingController {
                                         rank = i + 1
                                     }
                                 }
+                                rank--;
                                 res.json({ rank: rank })
                             }
                         }
