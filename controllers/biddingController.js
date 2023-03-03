@@ -82,6 +82,11 @@ class biddingController {
             })
         }
     }
+    static get_leaderboard = async (req, res) => {
+        const isname = await startup_model.findOne({ name: req.body.name })
+        console.log(isname);
+        res.status(200).json(isname.leaderboard)
+    }
 }
 
 module.exports = biddingController

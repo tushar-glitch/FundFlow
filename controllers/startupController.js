@@ -121,6 +121,14 @@ class startupController {
             }
         }
     }
+    static single_startup_details = async (req, res) => {
+        const bearerheader = req.headers['authorization']
+        const tokenArr = bearerheader.split(' ')
+        const token = tokenArr[1]
+        const decode = jwt.verify(token, secretKey)
+        const startup_details = await startup_model.find({ email: decode.email })
+        res.status(200).json(startup_details)
+    }
 }
 
 module.exports = startupController
