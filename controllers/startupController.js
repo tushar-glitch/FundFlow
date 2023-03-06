@@ -129,6 +129,31 @@ class startupController {
         const startup_details = await startup_model.find({ email: decode.email })
         res.status(200).json(startup_details)
     }
+    static patch_startup = async (req, res) => {
+        const { name, type_of_company, est_year, revenue_of_last_year, video_link, evaluation_of_last_year, founder, co_founder, location, ask_money, give_equity } = req.body
+        if (name&& type_of_company&& est_year&& revenue_of_last_year&& video_link&& evaluation_of_last_year&& founder&& co_founder&& location&& ask_money&& give_equity) {
+            const isname = await startup_model.findOne({ name: name })
+            if (!isname) {
+                res.status(404).json({
+                    "message": "Startup not found!"
+                })
+                
+            }
+            else {
+                Object.assign(isname, req.body)
+                await isname.save()
+                res.status(200).json({
+                    message:"Fields updated successfully!"
+                })
+            }
+        }
+        else {
+            res.status(403).json({
+                "message": "Please enter all the fields"
+            })
+            console.log('Field empty');
+        }
+    }
 }
 
 module.exports = startupController
