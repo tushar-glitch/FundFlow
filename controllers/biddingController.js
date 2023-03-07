@@ -84,8 +84,10 @@ class biddingController {
     }
     static get_leaderboard = async (req, res) => {
         const isname = await startup_model.findOne({ name: req.body.name })
-        console.log(isname);
-        res.status(200).json(isname.leaderboard)
+        const data = isname.leaderboard;
+        data.sort((a, b) => b.evaluation - a.evaluation);
+        console.log(data);
+        res.status(200).json(data)
     }
 }
 
