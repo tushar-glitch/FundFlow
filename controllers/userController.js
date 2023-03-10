@@ -76,35 +76,61 @@ class userController {
     }
 
     static userRegistration = async (req, res) => {
-        const { name, age, email, password, Role } = req.body
+        const { name, email, password, Role } = req.body
         if (name && email && password && Role) {
-            const isemail = await auth_Model.findOne({ email: email })
-            if (!isemail) {
-                const newpass = await bcrypt.hash(password, 10)
-                const new_user = auth_Model({
-                    name: name,
-                    email: email,
-                    password: newpass,
-                    Role: Role,
-                    isverified: false
-                })
-                userController.sendotp(email, res)
-                const save_user = await new_user.save()
-                res.status(200).json({
-                    message: "Otp has been sent successfully to your email!"
-                })
+            if (Role.toLowerCase() == 'pitcher') {
+                console.log('Hey');
+                const isemailinstartup = await startup_model.findOne({ email: email })
+                if (!isemailinstartup) {
+                    const hashpass = await bcrypt.hash(password,10)
+                    const newstartupuser = startup_model({
+                        name: name,
+                        email: email,
+                        password: hashpass,
+                        Role: Role,
+                        isverified:false
+                    })
+                    const saveuser = await newstartupuser.save()
+                    userController.sendotp(email, res)
+                    res.status(200).json({
+                        message:"Otp has been sent to your email"
+                    })
+                }
+                else {
+                    res.status(403).json({
+                        message:"Email is already in use!"
+                    })
+                }
             }
             else {
-                res.status(403).json({
-                    "message": "User already exist!"
-                })
+                const isemailininvestor = await auth_Model.findOne({ email: email })
+                console.log('hey');
+                if (!isemailininvestor) {
+                    const hashpass = await bcrypt.hash(password,10)
+                    const newinvestor = auth_Model({
+                        name: name,
+                        email: email,
+                        password: hashpass,
+                        Role: Role,
+                        isverified:false
+                    })
+                    const saveuser = await newinvestor.save()
+                    userController.sendotp(email, res)
+                    res.status(200).json({
+                        message:"Otp has been sent to your email"
+                    })
+                }
+                else {
+                    res.status(403).json({
+                        message:"Email is already in use!"
+                    })
+                }
             }
         }
         else {
-            res.status(403).json({
-                "message": "Please enter all the fields"
+            res.status(400).json({
+                message:"Please enter all the fields!"
             })
-            console.log('Field empty');
         }
     }
 
@@ -112,39 +138,71 @@ class userController {
     static userLogin = async (req, res) => {
         const { email, password, role } = req.body
         if (email && password && role) {
-            const isuser = await auth_Model.findOne({ email: email })
-            if (!isuser) {
-                res.status(403).json({
-                    "message": "Email not found"
-                })
-            }
-            else {
-                const ispasscorrect = await bcrypt.compare(password, isuser.password)
-                if (!ispasscorrect) {
+            if (role.toLowerCase() == 'pitcher') {
+                const isuser = await startup_model.findOne({ email: email })
+                if (!isuser) {
                     res.status(403).json({
-                        "message": "Incorrect password"
+                        "message": "Email not found"
                     })
                 }
                 else {
-                    if ((isuser.Role).toLowerCase() == role.toLowerCase()) {
-                        const token = jwt.sign({ email, password }, secretKey, { expiresIn: '1h' })
-                        if ((isuser.Role).toLowerCase() == 'pitcher') {
-                            const startupdetails = await startup_model.find({ email: email })
-                            res.status(200).json({
-                                token: token,
-                                startupdetails: startupdetails
-                            })
+                    console.log(isuser);
+                    const ispasscorrect = await bcrypt.compare(password, isuser.password)
+                    if (!ispasscorrect) {
+                        res.status(403).json({
+                            "message": "Incorrect password"
+                        })
+                    }
+                    else {
+                        if ((isuser.Role).toLowerCase() == role.toLowerCase()) {
+                            const token = jwt.sign({ email, password }, secretKey, { expiresIn: '1h' })
+                            if ((isuser.Role).toLowerCase() == 'pitcher') {
+                                const startupdetails = await startup_model.find({ email: email })
+                                res.status(200).json({
+                                    token: token,
+                                    startupdetails: startupdetails
+                                })
+                            }
+                            else {
+                                res.status(200).json({
+                                    "token": token
+                                })
+                            }
                         }
                         else {
-                            res.status(200).json({
-                                "token": token
+                            res.status(403).json({
+                                message: "Invalid role"
                             })
                         }
                     }
-                    else {
+                }
+            }
+            else {
+                const isuser = await auth_Model.findOne({ email: email })
+                if (!isuser) {
+                    res.status(403).json({
+                        "message": "Email not found"
+                    })
+                }
+                else {
+                    const ispasscorrect = await bcrypt.compare(password, isuser.password)
+                    if (!ispasscorrect) {
                         res.status(403).json({
-                            message: "Invalid role"
+                            "message": "Incorrect password"
                         })
+                    }
+                    else {
+                        if ((isuser.Role).toLowerCase() == role.toLowerCase()) {
+                            const token = jwt.sign({ email, password }, secretKey, { expiresIn: '1h' })
+                                res.status(200).json({
+                                    "token": token
+                                })
+                        }
+                        else {
+                            res.status(403).json({
+                                message: "Invalid role"
+                            })
+                        }
                     }
                 }
             }

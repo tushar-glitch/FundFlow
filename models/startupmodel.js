@@ -6,44 +6,34 @@ const startup_schema = new mongoose.Schema({
         required: true
     },
     type_of_company: {
-        type: String,
-        required: true
+        type: String
     },
     est_year: {
-        type: Number,
-        required:true
+        type: Number
     },
     revenue_of_last_year: {
-        type: Number,
-        required: true
+        type: Number
     },
     video_link: {
-        type: String,
-        required:true
+        type: String
     },
     evaluation_of_last_year: {
-        type: String,
-        required:true
+        type: String
     },
     founder: {
-        type: String,
-        required:true
+        type: String
     },
     co_founder: {
-        type: String,
-        required:true
+        type: String
     },
     location: {
-        type: String,
-        required:true
+        type: String
     },
     ask_money: {
-        type: Number,
-        required:true
+        type: Number
     },
     give_equity: {
-        type: Number,
-        required:true
+        type: Number
     },
     leaderboard: {
         type: Array
@@ -52,6 +42,12 @@ const startup_schema = new mongoose.Schema({
         type:Boolean
     },
     email: {
+        type:String
+    },
+    password: {
+        type:String
+    },
+    Role: {
         type:String
     }
 })
