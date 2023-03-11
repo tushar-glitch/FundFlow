@@ -30,9 +30,11 @@ class investorController {
     }
     static get_investor = async (req, res) => {
         const investor = await auth_Model.find()
+        console.log(investor);
         const investorlist = [{}]
         for (let i = 0; i < investor.length; ++i) {
-            if ((investor[i].Role).toLowerCase == 'investor')
+            if(investor[i].Role)
+            if ((investor[i].Role).toLowerCase() == 'investor')
                 investorlist.push(investor[i])
         }
         res.send(investorlist)
