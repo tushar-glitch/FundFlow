@@ -82,23 +82,23 @@ class userController {
                 console.log('Hey');
                 const isemailinstartup = await startup_model.findOne({ email: email })
                 if (!isemailinstartup) {
-                    const hashpass = await bcrypt.hash(password,10)
+                    const hashpass = await bcrypt.hash(password, 10)
                     const newstartupuser = startup_model({
                         name: name,
                         email: email,
                         password: hashpass,
                         Role: Role,
-                        isverified:false
+                        isverified: false
                     })
                     const saveuser = await newstartupuser.save()
                     userController.sendotp(email, res)
                     res.status(200).json({
-                        message:"Otp has been sent to your email"
+                        message: "Otp has been sent to your email"
                     })
                 }
                 else {
                     res.status(403).json({
-                        message:"Email is already in use!"
+                        message: "Email is already in use!"
                     })
                 }
             }
@@ -106,30 +106,30 @@ class userController {
                 const isemailininvestor = await auth_Model.findOne({ email: email })
                 console.log('hey');
                 if (!isemailininvestor) {
-                    const hashpass = await bcrypt.hash(password,10)
+                    const hashpass = await bcrypt.hash(password, 10)
                     const newinvestor = auth_Model({
                         name: name,
                         email: email,
                         password: hashpass,
                         Role: Role,
-                        isverified:false
+                        isverified: false
                     })
                     const saveuser = await newinvestor.save()
                     userController.sendotp(email, res)
                     res.status(200).json({
-                        message:"Otp has been sent to your email"
+                        message: "Otp has been sent to your email"
                     })
                 }
                 else {
                     res.status(403).json({
-                        message:"Email is already in use!"
+                        message: "Email is already in use!"
                     })
                 }
             }
         }
         else {
             res.status(400).json({
-                message:"Please enter all the fields!"
+                message: "Please enter all the fields!"
             })
         }
     }
@@ -154,26 +154,12 @@ class userController {
                         })
                     }
                     else {
-                        if ((isuser.Role).toLowerCase() == role.toLowerCase()) {
-                            const token = jwt.sign({ email, password }, secretKey, { expiresIn: '1h' })
-                            if ((isuser.Role).toLowerCase() == 'pitcher') {
-                                const startupdetails = await startup_model.find({ email: email })
-                                res.status(200).json({
-                                    token: token,
-                                    startupdetails: startupdetails
-                                })
-                            }
-                            else {
-                                res.status(200).json({
-                                    "token": token
-                                })
-                            }
-                        }
-                        else {
-                            res.status(403).json({
-                                message: "Invalid role"
-                            })
-                        }
+                        const token = jwt.sign({ email, password }, secretKey, { expiresIn: '1h' })
+                        const startupdetails = await startup_model.find({ email: email })
+                        res.status(200).json({
+                            token: token,
+                            startupdetails: startupdetails
+                        })
                     }
                 }
             }
@@ -194,9 +180,9 @@ class userController {
                     else {
                         if ((isuser.Role).toLowerCase() == role.toLowerCase()) {
                             const token = jwt.sign({ email, password }, secretKey, { expiresIn: '1h' })
-                                res.status(200).json({
-                                    "token": token
-                                })
+                            res.status(200).json({
+                                "token": token
+                            })
                         }
                         else {
                             res.status(403).json({
