@@ -16,9 +16,17 @@ class investorController {
                 Object.assign(isname, req.body)
                 await isname.save()
                 console.log(isname);
+                const investor = await auth_Model.find()
+                const investorlist = [{}]
+                for (let i = 0; i < investor.length; ++i) {
+                    if (investor[i].Role)
+                        if ((investor[i].Role).toLowerCase() == 'investor')
+                            investorlist.push(investor[i])
+                }
                 res.status(200).json({
-                    message:"Fields updated successfully!"
-                })  
+                    message: "Fields updated successfully!",
+                    investorlist:investorlist
+                })
             }
         }
         else {
@@ -33,9 +41,9 @@ class investorController {
         console.log(investor);
         const investorlist = [{}]
         for (let i = 0; i < investor.length; ++i) {
-            if(investor[i].Role)
-            if ((investor[i].Role).toLowerCase() == 'investor')
-                investorlist.push(investor[i])
+            if (investor[i].Role)
+                if ((investor[i].Role).toLowerCase() == 'investor')
+                    investorlist.push(investor[i])
         }
         res.send(investorlist)
     }
