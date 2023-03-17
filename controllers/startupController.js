@@ -29,14 +29,14 @@ class startupController {
             })
             const isemaili = await startup_model.findOne({ email: decode.email })
             if (!isemaili) {
-                const save_startup = await new_startup.save()
-                res.status(200).json({
-                    message: "New Startup created!"
+                res.status(400).json({
+                    message: "Startup with this email does not exist!"
                 })
             }
             else {
-                res.status(400).json({
-                    message: "Startup with this email id already exist!"
+                const save_startup = await new_startup.save()
+                res.status(200).json({
+                    message: "New Startup created!"
                 })
             }
         }
