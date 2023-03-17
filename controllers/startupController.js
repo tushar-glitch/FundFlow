@@ -11,22 +11,6 @@ class startupController {
             const tokenArr = bearerheader.split(' ')
             const token = tokenArr[1]
             const decode = jwt.verify(token, secretKey)
-            const new_startup = startup_model({
-                name: name,
-                type_of_company: type_of_company,
-                est_year: est_year,
-                revenue_of_last_year: revenue_of_last_year,
-                video_link: video_link,
-                evaluation_of_last_year: evaluation_of_last_year,
-                founder: founder,
-                co_founder: co_founder,
-                location: location,
-                ask_money: ask_money,
-                give_equity: give_equity,
-                leaderboard: [{}],
-                isstart: false,
-                email: decode.email
-            })
             const isemaili = await startup_model.findOne({ email: decode.email })
             if (!isemaili) {
                 res.status(400).json({
@@ -34,9 +18,12 @@ class startupController {
                 })
             }
             else {
-                const save_startup = await new_startup.save()
+                Object.assign(isemaili, req.body)
+                await isemaili.save()
+                const details = await startup_model.findOne({email:decode.email})
                 res.status(200).json({
-                    message: "New Startup created!"
+                    message: "Startup details filled successfully!",
+                    details:details
                 })
             }
         }
@@ -49,11 +36,6 @@ class startupController {
     static getstartupdetails = async (req, res) => {
         const allstartups = await startup_model.find()
         res.send(allstartups)
-        // var startupnames=[]
-        // for (let i = 0; i < allstartups.length; ++i){
-        //     console.log(allstartups[i].name) 
-        //     startupnames.push_back(allstartups[i].name)
-        // }
     }
     static start_auction = async (req, res) => {
         const { name } = req.body
